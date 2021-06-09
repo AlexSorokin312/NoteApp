@@ -11,9 +11,9 @@
         android:id="@+id/task_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Сделать домашнее задание"
+        tools:text="Сделать домашнее задание"
         android:textAlignment="center"
-        android:textSize="40sp" />
+        android:textSize="@dimen/note_Size" />
 
     <TextView
         android:id="@+id/task_description"
@@ -21,6 +21,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:paddingStart="10dp"
-        android:text="Сделать задачу №1, задачу #2, задачу #3"
-        android:textSize="25sp" />
+        tools:text="Сделать задачу №1, задачу #2, задачу #3"
+        android:textSize="@dimen/description_size" />
 </LinearLayout>

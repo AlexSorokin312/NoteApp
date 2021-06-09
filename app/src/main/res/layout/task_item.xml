@@ -21,8 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:ems="13"
-        android:text="Подготовиться к экзамену"
-        android:textSize="20sp" />
+        tools:text="Подготовиться к экзамену"
+        android:textSize="@dimen/note_size_at_list" />
 
     <TextView
         android:id="@+id/date"
@@ -30,6 +30,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_marginBottom="18dp"
-        android:text="Дата создания: 07.06.2016"
-        android:textSize="15sp" />
+        tools:text="Дата создания: 07.06.2016"
+        android:textSize="@dimen/date_text" />
 </GridLayout>
