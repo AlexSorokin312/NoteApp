@@ -9,20 +9,20 @@
 
     <TextView
         android:id="@+id/task_name"
-        android:textColor="@color/black"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="Сделать домашнее задание"
         android:textAlignment="center"
-        android:textSize="@dimen/note_Size" />
+        android:textColor="@color/black"
+        android:textSize="@dimen/note_Size"
+        tools:text="Сделать домашнее задание" />
 
     <TextView
         android:id="@+id/task_description"
         android:layout_width="match_parent"
-        android:textColor="@color/black"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:paddingStart="10dp"
-        tools:text="Сделать задачу №1, задачу #2, задачу #3"
-        android:textSize="@dimen/description_size" />
+        android:textColor="@color/black"
+        android:textSize="@dimen/description_size"
+        tools:text="Сделать задачу №1, задачу #2, задачу #3" />
 </LinearLayout>

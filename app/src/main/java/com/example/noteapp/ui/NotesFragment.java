@@ -33,26 +33,34 @@ public class NotesFragment extends Fragment {
     private NoteRepositoryImp noteRepository;
     private OnNoteClicked onNoteClicked;
     private onEditNoteClicked onEditNoteClicked;
+    private onDateEditClick onDateEditClick;
 
     public interface OnNoteClicked {
         void onNoteClicked(Note note);
     }
 
+
     public interface onEditNoteClicked {
-        void onEditNoteClick(Note note);
+        void onEditNoteClick(Note note, View v, AppCompatImageView imageWidget, LinearLayout noteList, View itemView);
+    }
+
+    public interface onDateEditClick {
+        void onDateEditClick(Note note, View v, AppCompatImageView imageWidget, LinearLayout noteList, View itemView);
     }
 
     public NotesFragment() {
         // Required empty public constructor
     }
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnNoteClicked) {
+        if (context instanceof OnNoteClicked)
             onNoteClicked = (OnNoteClicked) context;
-        }
+        if (context instanceof onEditNoteClicked)
+            onEditNoteClicked = (onEditNoteClicked) context;
+        if (context instanceof onDateEditClick)
+            onDateEditClick = (onDateEditClick) context;
     }
 
     @Override
@@ -93,32 +101,10 @@ public class NotesFragment extends Fragment {
             editNote.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                  /*  if (onNoteClicked != null) {
-                        onEditNoteClicked.onEditNoteClick(note);
-                    }*/
-                    PopupMenu menu = new PopupMenu(requireContext(), v);
-                    getActivity().getMenuInflater().inflate(R.menu.menu_edit, menu.getMenu());
-
-                    menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            if (item.getItemId() == R.id.edit)
-                                Toast.makeText(requireContext(), "Редактировать", Toast.LENGTH_SHORT).show();
-                            if (item.getItemId() == R.id.makeCompleted) {
-                                note.setCompleted(true);
-                                imageIsCompleted.setImageResource(R.drawable.trophy_icon);
-                            }
-                            if (item.getItemId() == R.id.makeNotCompleted) {
-                                note.setCompleted(false);
-                                imageIsCompleted.setImageResource(R.drawable.trophy_icon);
-                            }
-                            if (item.getItemId() == R.id.delete) {
-                                noteList.removeView(itemView);
-                            }
-                            return false;
-                        }
-                    });
-                    menu.show();
+                    if (onNoteClicked != null) {
+                        onEditNoteClicked.onEditNoteClick(note, v, imageIsCompleted, noteList,
+                                itemView);
+                    }
                 }
             });
 
@@ -128,24 +114,21 @@ public class NotesFragment extends Fragment {
                     onNoteClicked.onNoteClicked(note);
                 }
             });
-            Calendar calendar = Calendar.getInstance();
-            final int year = Calendar.YEAR;
-            final int day = Calendar.DAY_OF_MONTH;
-            final int month = Calendar.MONTH;
 
             //Устанавливаем дату по клику
             dateTx.setOnClickListener(v -> {
-                setListener = new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        String prefixDateCreation = getResources().getString(R.string.dateCreationText);
-                        month = month + 1;
-                        String date = String.format("%d.%d.%d", dayOfMonth, month, year);
-                        note.setDate(date);
-                        date = String.format("%s %s", prefixDateCreation, date);
-                        dateTx.setText(date);
+                Calendar calendar = Calendar.getInstance();
+                final int year = Calendar.YEAR;
+                final int day = Calendar.DAY_OF_MONTH;
+                final int month = Calendar.MONTH;
+                setListener = (view1, year1, month1, dayOfMonth) -> {
+                    String prefixDateCreation = getResources().getString(R.string.dateCreationText);
+                    month1 = month1 + 1;
+                    String date = String.format("%d.%d.%d", dayOfMonth, month1, year1);
+                    note.setDate(date);
+                    date = String.format("%s %s", prefixDateCreation, date);
+                    dateTx.setText(date);
 
-                    }
                 };
                 DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext()
                         , android.R.style.Theme_Holo_Light_Dialog

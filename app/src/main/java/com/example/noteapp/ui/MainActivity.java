@@ -3,11 +3,16 @@ package com.example.noteapp.ui;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.example.noteapp.R;
@@ -15,7 +20,10 @@ import com.example.noteapp.domain.Note;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity implements NotesFragment.OnNoteClicked, NotesFragment.onEditNoteClicked{
+public class MainActivity extends AppCompatActivity implements
+        NotesFragment.OnNoteClicked,
+        NotesFragment.onEditNoteClicked,
+        NotesFragment.onDateEditClick {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,30 +67,57 @@ public class MainActivity extends AppCompatActivity implements NotesFragment.OnN
         });
     }
 
+    //Открытие заметки по нажатию
     @Override
     public void onNoteClicked(Note note) {
         boolean isLandscaped = getResources().getBoolean(R.bool.isLandscape);
-
         if (isLandscaped) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.note_details, NoteInfoFragment.newInstance(note))
                     .addToBackStack(null)
-                    .commit();
+                    .commitAllowingStateLoss();
         } else {
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.notes, NoteInfoFragment.newInstance(note))
                     .addToBackStack(null)
-                    .commit();
+                    .commitAllowingStateLoss();
         }
     }
 
     @Override
-    public void onEditNoteClick(Note note) {
+    public void onDateEditClick(Note note, View v, AppCompatImageView imageWidget, LinearLayout noteList, View itemView) {
 
     }
 
+    //Нажатие на кнопку редактирования заметки
+    @Override
+    public void onEditNoteClick(Note note, View v, AppCompatImageView imageWidget, LinearLayout noteList, View itemView) {
+        PopupMenu menu = new PopupMenu(getApplicationContext(), v);
+        getMenuInflater().inflate(R.menu.menu_edit, menu.getMenu());
+
+        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.edit)
+                    Toast.makeText(getApplicationContext(), "Редактировать", Toast.LENGTH_SHORT).show();
+                if (item.getItemId() == R.id.makeCompleted) {
+                    note.setCompleted(true);
+                    imageWidget.setImageResource(R.drawable.trophy_icon);
+                }
+                if (item.getItemId() == R.id.makeNotCompleted) {
+                    note.setCompleted(false);
+                    imageWidget.setImageResource(R.drawable.trophy_icon);
+                }
+                if (item.getItemId() == R.id.delete) {
+                    noteList.removeView(itemView);
+                }
+                return false;
+            }
+        });
+        menu.show();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -98,5 +133,4 @@ public class MainActivity extends AppCompatActivity implements NotesFragment.OnN
         }
         return super.onOptionsItemSelected(item);
     }
-
 }
