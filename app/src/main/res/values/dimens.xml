@@ -4,4 +4,6 @@
     <dimen name="description_size">25sp</dimen>
     <dimen name="note_size_at_list">20sp</dimen>
     <dimen name="date_text">15sp</dimen>
+    <dimen name="taskMargin">10dp</dimen>
+    <dimen name="name_font_size">30sp</dimen>
 </resources>

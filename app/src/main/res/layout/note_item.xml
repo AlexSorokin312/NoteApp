@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:columnCount="3"
+    android:layout_marginTop="15dp"
+    tools:context=".ui.NotesFragment">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/task_complete"
+        android:layout_width="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/trophy_icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/task"
+        android:layout_width="0dp"
+        android:layout_marginLeft="20dp"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:textColor="@color/black"
+        android:layout_marginTop="@dimen/taskMargin"
+        app:layout_constraintEnd_toStartOf="@id/editClick"
+        android:layout_gravity="fill_horizontal"
+        android:textSize="@dimen/note_size_at_list"
+        app:layout_constraintStart_toEndOf="@+id/task_complete"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Подготовиться к экзамену" />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:textSize="@dimen/date_text"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/task_complete"
+        app:layout_constraintTop_toBottomOf="@+id/task"
+        tools:text="Дата создания: 07.06.2016" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/editClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/edit_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/task"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

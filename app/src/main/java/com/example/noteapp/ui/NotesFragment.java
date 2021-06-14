@@ -1,6 +1,5 @@
 package com.example.noteapp.ui;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -8,42 +7,45 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
-import android.widget.GridLayout;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.noteapp.R;
 import com.example.noteapp.domain.Note;
-import com.example.noteapp.domain.NoteRepository;
 import com.example.noteapp.domain.NoteRepositoryImp;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class NoteFragment extends Fragment {
+public class NotesFragment extends Fragment {
 
     private DatePickerDialog.OnDateSetListener setListener;
     private NoteRepositoryImp noteRepository;
-
+    private OnNoteClicked onNoteClicked;
+    private onEditNoteClicked onEditNoteClicked;
 
     public interface OnNoteClicked {
         void onNoteClicked(Note note);
     }
 
-    public NoteFragment() {
+    public interface onEditNoteClicked {
+        void onEditNoteClick(Note note);
+    }
+
+    public NotesFragment() {
         // Required empty public constructor
     }
 
-    private OnNoteClicked onNoteClicked;
 
     @Override
     public void onAttach(Context context) {
@@ -67,7 +69,7 @@ public class NoteFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.tasks_list, container, false);
+        return inflater.inflate(R.layout.notes_list, container, false);
     }
 
     @Override
@@ -78,11 +80,48 @@ public class NoteFragment extends Fragment {
         List<Note> notes = noteRepository.getNotes();
 
         for (Note note : notes) {
-            View itemView = LayoutInflater.from(requireContext()).inflate(R.layout.task_item, noteList, false);
+            View itemView = LayoutInflater.from(requireContext()).inflate(R.layout.note_item, noteList, false);
             TextView tx = itemView.findViewById(R.id.task);
             TextView dateTx = itemView.findViewById(R.id.date);
+            AppCompatImageView imageIsCompleted = itemView.findViewById(R.id.task_complete);
             tx.setText(note.getName());
             dateTx.setText(note.getDateCreation());
+            if (note.isCompleted()) imageIsCompleted.setImageResource(R.drawable.trophy_icon);
+            else imageIsCompleted.setImageResource(R.drawable.hourglass_icon);
+            AppCompatImageView editNote = itemView.findViewById(R.id.editClick);
+
+            editNote.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                  /*  if (onNoteClicked != null) {
+                        onEditNoteClicked.onEditNoteClick(note);
+                    }*/
+                    PopupMenu menu = new PopupMenu(requireContext(), v);
+                    getActivity().getMenuInflater().inflate(R.menu.menu_edit, menu.getMenu());
+
+                    menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if (item.getItemId() == R.id.edit)
+                                Toast.makeText(requireContext(), "Редактировать", Toast.LENGTH_SHORT).show();
+                            if (item.getItemId() == R.id.makeCompleted) {
+                                note.setCompleted(true);
+                                imageIsCompleted.setImageResource(R.drawable.trophy_icon);
+                            }
+                            if (item.getItemId() == R.id.makeNotCompleted) {
+                                note.setCompleted(false);
+                                imageIsCompleted.setImageResource(R.drawable.trophy_icon);
+                            }
+                            if (item.getItemId() == R.id.delete) {
+                                noteList.removeView(itemView);
+                            }
+                            return false;
+                        }
+                    });
+                    menu.show();
+                }
+            });
+
             //Открываем информацию о заметке по клику
             itemView.setOnClickListener(v -> {
                 if (onNoteClicked != null) {
@@ -115,8 +154,6 @@ public class NoteFragment extends Fragment {
                 datePickerDialog.show();
 
             });
-
-
             noteList.addView(itemView);
         }
     }

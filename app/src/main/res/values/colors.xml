@@ -6,6 +6,8 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
+    <color name="blue">#8E8BEF</color>
     <color name="topMenu">#DEDEDE</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="GrannyApple">#A8E4A0</color>
 </resources>

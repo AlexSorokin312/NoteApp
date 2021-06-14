@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/edit"
+        android:title="@string/edit" />
+
+    <item
+        android:id="@+id/makeCompleted"
+        android:title="@string/makeComleted" />
+
+    <item
+        android:id="@+id/makeNotCompleted"
+        android:title="@string/make_not_completed" />
+
+    <item
+        android:id="@+id/delete"
+        android:title="@string/delete" />
+</menu>

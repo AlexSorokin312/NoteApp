@@ -8,6 +8,23 @@ public class Note implements Parcelable {
     private String name;
     private String description;
     private String dateCreation;
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setDateCreation(String dateCreation) {
+        this.dateCreation = dateCreation;
+    }
+
+    public void setCompleted(boolean completed) {
+        isCompleted = completed;
+    }
+
     private boolean isCompleted;
 
     public Note(String name, String description, String dateCreation, boolean isCompleted) {
