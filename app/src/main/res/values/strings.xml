@@ -10,4 +10,7 @@
     <string name="select_all">Выделить все</string>
     <string name="show_completed">Показать выполненные</string>
     <string name="show_notCompleted">Показать невыполненные</string>
+    <string name="edit_profile">Редактировать профиль</string>
+    <string name="about_app">О приложении</string>
+    <string name="settings">Настройки</string>
 </resources>

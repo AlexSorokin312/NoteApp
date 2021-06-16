@@ -1,10 +1,12 @@
 package com.example.noteapp.domain;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface NoteRepository {
 
     ArrayList<Note> getNotes();
 
-    String changeDate();
+    void deleteElement(Note note);
+    void addElement(Note note);
 }

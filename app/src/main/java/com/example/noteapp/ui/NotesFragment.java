@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.noteapp.R;
 import com.example.noteapp.domain.Note;
+import com.example.noteapp.domain.NoteRepository;
 import com.example.noteapp.domain.NoteRepositoryImp;
 
 import java.util.Calendar;
@@ -29,7 +31,6 @@ import java.util.List;
 
 public class NotesFragment extends Fragment {
 
-    private DatePickerDialog.OnDateSetListener setListener;
     private NoteRepositoryImp noteRepository;
     private OnNoteClicked onNoteClicked;
     private onEditNoteClicked onEditNoteClicked;
@@ -41,11 +42,11 @@ public class NotesFragment extends Fragment {
 
 
     public interface onEditNoteClicked {
-        void onEditNoteClick(Note note, View v, AppCompatImageView imageWidget, LinearLayout noteList, View itemView);
+        void onEditNoteClicked(Note note, View v, AppCompatImageView imageWidget, LinearLayout noteList, View itemView);
     }
 
     public interface onDateEditClick {
-        void onDateEditClick(Note note, View v, AppCompatImageView imageWidget, LinearLayout noteList, View itemView);
+        void onDateEditClick(Note note, TextView dateTx);
     }
 
     public NotesFragment() {
@@ -83,10 +84,9 @@ public class NotesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         LinearLayout noteList = view.findViewById(R.id.notes_list_container);
+        noteList.removeAllViews();
         List<Note> notes = noteRepository.getNotes();
-
         for (Note note : notes) {
             View itemView = LayoutInflater.from(requireContext()).inflate(R.layout.note_item, noteList, false);
             TextView tx = itemView.findViewById(R.id.task);
@@ -98,44 +98,24 @@ public class NotesFragment extends Fragment {
             else imageIsCompleted.setImageResource(R.drawable.hourglass_icon);
             AppCompatImageView editNote = itemView.findViewById(R.id.editClick);
 
-            editNote.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (onNoteClicked != null) {
-                        onEditNoteClicked.onEditNoteClick(note, v, imageIsCompleted, noteList,
-                                itemView);
-                    }
-                }
-            });
 
-            //Открываем информацию о заметке по клику
-            itemView.setOnClickListener(v -> {
+            tx.setOnClickListener(v -> {
                 if (onNoteClicked != null) {
                     onNoteClicked.onNoteClicked(note);
                 }
             });
 
-            //Устанавливаем дату по клику
             dateTx.setOnClickListener(v -> {
-                Calendar calendar = Calendar.getInstance();
-                final int year = Calendar.YEAR;
-                final int day = Calendar.DAY_OF_MONTH;
-                final int month = Calendar.MONTH;
-                setListener = (view1, year1, month1, dayOfMonth) -> {
-                    String prefixDateCreation = getResources().getString(R.string.dateCreationText);
-                    month1 = month1 + 1;
-                    String date = String.format("%d.%d.%d", dayOfMonth, month1, year1);
-                    note.setDate(date);
-                    date = String.format("%s %s", prefixDateCreation, date);
-                    dateTx.setText(date);
+                if (onDateEditClick != null) {
+                    onDateEditClick.onDateEditClick(note, dateTx);
+                }
+            });
 
-                };
-                DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext()
-                        , android.R.style.Theme_Holo_Light_Dialog
-                        , setListener, year, month, day);
-                datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                datePickerDialog.show();
-
+            editNote.setOnClickListener(v -> {
+                if (onEditNoteClicked != null) {
+                    onEditNoteClicked.onEditNoteClicked(note, v, imageIsCompleted, noteList,
+                            itemView);
+                }
             });
             noteList.addView(itemView);
         }

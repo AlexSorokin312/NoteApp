@@ -25,6 +25,23 @@ public class Note implements Parcelable {
         isCompleted = completed;
     }
 
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getDateCreation() {
+        return dateCreation;
+    }
+
+    public void setDate(String newDate) {
+        this.dateCreation = newDate;
+    }
+
     private boolean isCompleted;
 
     public Note(String name, String description, String dateCreation, boolean isCompleted) {
@@ -52,22 +69,6 @@ public class Note implements Parcelable {
             return new Note[size];
         }
     };
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getDateCreation() {
-        return dateCreation;
-    }
-
-    public void setDate(String newDate) {
-        this.dateCreation = newDate;
-    }
 
     public boolean isCompleted() {
         return isCompleted;
