@@ -1,8 +1,7 @@
-package com.example.noteapp.ui;
+package com.example.noteapp.ui.NoteInfo;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -54,4 +53,5 @@ public class NoteInfoFragment extends Fragment {
         heading.setText(note.getName());
         description.setText(note.getDescription());
     }
+
 }

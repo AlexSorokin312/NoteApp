@@ -1,56 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="15dp"
+    android:backgroundTint="@color/GrannyApple"
     android:columnCount="3"
-    tools:context=".ui.NotesFragment">
+    tools:context=".ui.NoteList.NotesFragment">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/task_complete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:src="@drawable/trophy_icon"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/task"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_column="1"
-        android:layout_gravity="fill_horizontal"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="@dimen/taskMargin"
-        android:textColor="@color/black"
-        android:textSize="@dimen/note_size_at_list"
-        app:layout_constraintEnd_toStartOf="@id/editClick"
-        app:layout_constraintStart_toEndOf="@+id/task_complete"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Подготовиться к экзамену" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/task_complete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/trophy_icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:textColor="@color/black"
-        android:textSize="@dimen/date_text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/task_complete"
-        app:layout_constraintTop_toBottomOf="@+id/task"
-        tools:text="Дата создания: 07.06.2016" />
+        <TextView
+            android:id="@+id/task"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_gravity="fill_horizontal"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="@dimen/taskMargin"
+            android:textColor="@color/black"
+            android:textSize="@dimen/note_size_at_list"
+            app:layout_constraintEnd_toStartOf="@id/editClick"
+            app:layout_constraintStart_toEndOf="@+id/task_complete"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Подготовиться к экзамену" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/editClick"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/edit_icon"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/task"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/date_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/task_complete"
+            app:layout_constraintTop_toBottomOf="@+id/task"
+            tools:text="Дата создания: 07.06.2016" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/editClick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/edit_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/task"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

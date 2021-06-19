@@ -5,9 +5,9 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -15,13 +15,15 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.noteapp.R;
 import com.example.noteapp.domain.Note;
+import com.example.noteapp.ui.NoteInfo.NoteEdit.EditNoteFragment;
+import com.example.noteapp.ui.NoteInfo.NoteInfoFragment;
+import com.example.noteapp.ui.NoteList.NotesFragment;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 
@@ -30,7 +32,8 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity implements
         NotesFragment.OnNoteClicked,
         NotesFragment.onEditNoteClicked,
-        NotesFragment.onDateEditClick {
+        NotesFragment.onDateEditClick,
+        EditNoteFragment.OnSaveClickListener{
 
     private DatePickerDialog.OnDateSetListener setListener;
 
@@ -61,17 +64,14 @@ public class MainActivity extends AppCompatActivity implements
                 .replace(R.id.notes, new NotesFragment(), "MainFragment")
                 .commit();
 
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem item) {
-                if (item.getItemId() == R.id.edit_profile)
-                    Toast.makeText(getApplicationContext(), "Редактировать профиль", Toast.LENGTH_SHORT).show();
-                if (item.getItemId() == R.id.settings)
-                    Toast.makeText(getApplicationContext(), "Настройки", Toast.LENGTH_SHORT).show();
-                if (item.getItemId() == R.id.about_app)
-                    Toast.makeText(getApplicationContext(), "О приложении", Toast.LENGTH_SHORT).show();
-                return false;
-            }
+        navigationView.setNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.edit_profile)
+                Toast.makeText(getApplicationContext(), "Редактировать профиль", Toast.LENGTH_SHORT).show();
+            if (item.getItemId() == R.id.settings)
+                Toast.makeText(getApplicationContext(), "Настройки", Toast.LENGTH_SHORT).show();
+            if (item.getItemId() == R.id.about_app)
+                Toast.makeText(getApplicationContext(), "О приложении", Toast.LENGTH_SHORT).show();
+            return false;
         });
     }
 
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.notes, NoteInfoFragment.newInstance(note))
+                    .replace(R.id.notes, NoteInfoFragment.newInstance(note), "NOTE_LIST")
                     .addToBackStack(null)
                     .commit();
         }
@@ -97,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements
     //Нажатие на кнопку редактирования даты
     @Override
     public void onDateEditClick(Note note, TextView dateTx) {
-        Calendar calendar = Calendar.getInstance();
         final int year = Calendar.YEAR;
         final int day = Calendar.DAY_OF_MONTH;
         final int month = Calendar.MONTH;
@@ -119,28 +118,32 @@ public class MainActivity extends AppCompatActivity implements
 
     //Нажатие на кнопку редактирования заметки
     @Override
-    public void onEditNoteClicked(Note note, View v, AppCompatImageView imageWidget, LinearLayout noteList, View itemView) {
+    public void onEditNoteClicked(Note note, View v, AppCompatImageView imageWidget, RecyclerView noteList, View itemView) {
         PopupMenu menu = new PopupMenu(getApplicationContext(), v);
         getMenuInflater().inflate(R.menu.menu_edit, menu.getMenu());
 
-        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if (item.getItemId() == R.id.edit)
-                    Toast.makeText(getApplicationContext(), "Редактировать", Toast.LENGTH_SHORT).show();
-                if (item.getItemId() == R.id.makeCompleted) {
-                    note.setCompleted(true);
-                    imageWidget.setImageResource(R.drawable.trophy_icon);
-                }
-                if (item.getItemId() == R.id.makeNotCompleted) {
-                    note.setCompleted(false);
-                    imageWidget.setImageResource(R.drawable.hourglass_icon);
-                }
-                if (item.getItemId() == R.id.delete) {
-                    noteList.removeView(itemView);
-                }
-                return false;
+        menu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.edit) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.notes, new EditNoteFragment().newInstance(note))
+                        .addToBackStack(null)
+                        .commit();
             }
+
+            if (item.getItemId() == R.id.makeCompleted) {
+                note.setCompleted(true);
+                imageWidget.setImageResource(R.drawable.trophy_icon);
+            }
+            if (item.getItemId() == R.id.makeNotCompleted) {
+                note.setCompleted(false);
+                imageWidget.setImageResource(R.drawable.hourglass_icon);
+            }
+            if (item.getItemId() == R.id.delete) {
+                Toast.makeText(MainActivity.this, String.format(" Удалить %s", note.getName().toString()), Toast.LENGTH_SHORT).show();
+                noteList.removeView(itemView);
+            }
+            return true;
         });
         menu.show();
     }
@@ -150,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements
         getMenuInflater().inflate(R.menu.menu_appbar, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -164,5 +168,15 @@ public class MainActivity extends AppCompatActivity implements
             Toast.makeText(getApplicationContext(), "Показать невыполненные", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSaveClickListener(Note note, String name, String description) {
+        note.setName(name);
+        note.setDescription(description);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.notes, new NotesFragment(), "MainFragment")
+                .commit();
     }
 }

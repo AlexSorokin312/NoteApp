@@ -13,4 +13,5 @@
     <string name="edit_profile">Редактировать профиль</string>
     <string name="about_app">О приложении</string>
     <string name="settings">Настройки</string>
+    <string name="save">Сохранить</string>
 </resources>

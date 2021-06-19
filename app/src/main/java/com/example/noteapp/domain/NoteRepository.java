@@ -8,5 +8,8 @@ public interface NoteRepository {
     ArrayList<Note> getNotes();
 
     void deleteElement(Note note);
+
+    void deleteAll(Note note);
+
     void addElement(Note note);
 }

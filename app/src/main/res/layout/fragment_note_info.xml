@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/GrannyApple"
     android:orientation="vertical"
-    tools:context=".ui.NoteInfoFragment">
+    tools:context=".ui.NoteInfo.NoteInfoFragment">
 
     <TextView
         android:id="@+id/task_name"
