@@ -43,9 +43,8 @@ public class NoteInfoFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
-        Note note = getArguments().getParcelable(ARG_NOTE);
         super.onViewCreated(view, savedInstanceState);
+        Note note = getArguments().getParcelable(ARG_NOTE);
 
         TextView heading = view.findViewById(R.id.task_name);
         TextView description = view.findViewById(R.id.task_description);

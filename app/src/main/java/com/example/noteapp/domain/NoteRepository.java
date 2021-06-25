@@ -9,7 +9,7 @@ public interface NoteRepository {
 
     void deleteElement(Note note);
 
-    void deleteAll(Note note);
+    void deleteAll();
 
-    void addElement(Note note);
+    Note addNote(String name, String description, String dateCreation, boolean isCompleted);
 }

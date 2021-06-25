@@ -14,4 +14,8 @@
     <string name="about_app">О приложении</string>
     <string name="settings">Настройки</string>
     <string name="save">Сохранить</string>
+    <string name="add_note">Добавить заметку</string>
+    <string name="note_name">Имя заметки</string>
+    <string name="shotr_description_note">Краткое описание</string>
+    <string name="save_added_note">Сохранить заметку</string>
 </resources>

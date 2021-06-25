@@ -8,6 +8,7 @@ public class Note implements Parcelable {
     private String name;
     private String description;
     private String dateCreation;
+    private boolean isCompleted;
 
     public void setName(String name) {
         this.name = name;
@@ -25,7 +26,6 @@ public class Note implements Parcelable {
         isCompleted = completed;
     }
 
-
     public String getName() {
         return name;
     }
@@ -42,7 +42,11 @@ public class Note implements Parcelable {
         this.dateCreation = newDate;
     }
 
-    private boolean isCompleted;
+    public Note addNote(String name, String description, String dateCreation, boolean isCompleted) {
+        Note note = new Note(name, description, dateCreation, isCompleted);
+        return note;
+    }
+
 
     public Note(String name, String description, String dateCreation, boolean isCompleted) {
         this.name = name;

@@ -5,7 +5,9 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.Fragment;
+
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DatePickerDialog;
@@ -21,8 +23,11 @@ import android.widget.Toast;
 
 import com.example.noteapp.R;
 import com.example.noteapp.domain.Note;
+import com.example.noteapp.domain.NoteRepositoryImp;
+import com.example.noteapp.ui.NoteAdd.NoteAdd;
 import com.example.noteapp.ui.NoteInfo.NoteEdit.EditNoteFragment;
 import com.example.noteapp.ui.NoteInfo.NoteInfoFragment;
+import com.example.noteapp.ui.NoteList.NotesAdapter;
 import com.example.noteapp.ui.NoteList.NotesFragment;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
@@ -33,7 +38,8 @@ public class MainActivity extends AppCompatActivity implements
         NotesFragment.OnNoteClicked,
         NotesFragment.onEditNoteClicked,
         NotesFragment.onDateEditClick,
-        EditNoteFragment.OnSaveClickListener{
+        EditNoteFragment.OnSaveClickListener,
+        NotesFragment.OnAddNote {
 
     private DatePickerDialog.OnDateSetListener setListener;
 
@@ -94,6 +100,17 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    @Override
+    public void onAddNote(NoteRepositoryImp noteRepository, NotesAdapter notesAdapter) {
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.notes, new NoteAdd(), "ADD_NOTE")
+                .addToBackStack(null)
+                .commit();
+    }
+
+
     //Нажатие на кнопку редактирования даты
     @Override
     public void onDateEditClick(Note note, TextView dateTx) {
@@ -140,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements
                 imageWidget.setImageResource(R.drawable.hourglass_icon);
             }
             if (item.getItemId() == R.id.delete) {
-                Toast.makeText(MainActivity.this, String.format(" Удалить %s", note.getName().toString()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, String.format(" Удалить %s", note.getName()), Toast.LENGTH_SHORT).show();
                 noteList.removeView(itemView);
             }
             return true;
@@ -149,26 +166,29 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.select_all) {
+            Toast.makeText(getBaseContext(), "Выбрать все заметки", Toast.LENGTH_SHORT).show();
+        }
+        if (itemId == R.id.show_completed) {
+            Toast.makeText(getBaseContext(), "Показать выполненные", Toast.LENGTH_SHORT).show();
+        }
+        if (itemId == R.id.show_uncompleted) {
+            Toast.makeText(getBaseContext(), "Показать невыполненные", Toast.LENGTH_SHORT).show();
+        }
+        if (itemId == R.id.add_note) {
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_appbar, menu);
         return true;
     }
 
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.select_all) {
-            Toast.makeText(getApplicationContext(), "Выбрать все заметки", Toast.LENGTH_SHORT).show();
-        }
-        if (itemId == R.id.show_completed) {
-            Toast.makeText(getApplicationContext(), "Показать выполненные", Toast.LENGTH_SHORT).show();
-        }
-        if (itemId == R.id.show_uncompleted) {
-            Toast.makeText(getApplicationContext(), "Показать невыполненные", Toast.LENGTH_SHORT).show();
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void onSaveClickListener(Note note, String name, String description) {

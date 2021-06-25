@@ -1,9 +1,13 @@
 package com.example.noteapp.ui.NoteList;
 
+import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -11,19 +15,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.noteapp.R;
 import com.example.noteapp.domain.Note;
+import com.example.noteapp.ui.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder> {
 
-    private ArrayList<Note> notes = new ArrayList<>();
-
+   private ArrayList<Note> notes = new ArrayList<>();
     public void setData(List<Note> toSet) {
         notes.addAll(toSet);
     }
 
-    //Нажатие на кнопку перехода в заметку
+    public int add(Note note){
+        notes.add(note);
+        return notes.size() - 1;
+    }
 
     public interface OnNoteClicked {
         void onNoteClicked(Note note);
@@ -110,13 +117,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             imageIsCompleted = itemView.findViewById(R.id.task_complete);
             editNote = itemView.findViewById(R.id.editClick);
             itemView.findViewById(R.id.editClick);
-
             tx.setOnClickListener(v -> {
                 if (getOnNoteClickedListener() != null) {
                     getOnNoteClickedListener().onNoteClicked(notes.get(getAdapterPosition()));
                 }
             });
-
             editNote.setOnClickListener(v -> {
                 if (getOnEditNoteClicked() != null) {
                     getOnEditNoteClicked().onEditNoteClicked(notes.get(getAdapterPosition()), v, imageIsCompleted, itemView);

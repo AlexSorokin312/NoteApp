@@ -9,27 +9,41 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.noteapp.R;
 import com.example.noteapp.domain.Note;
+import com.example.noteapp.domain.NoteRepository;
 import com.example.noteapp.domain.NoteRepositoryImp;
+import com.google.android.material.appbar.MaterialToolbar;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class NotesFragment extends Fragment {
 
-    private NoteRepositoryImp noteRepository;
+    private NoteRepositoryImp noteRepository = NoteRepositoryImp.INSTANCE;
     private OnNoteClicked onNoteClicked;
     private onEditNoteClicked onEditNoteClicked;
     private onDateEditClick onDateEditClick;
+    private OnAddNote onAddNote;
+    private NotesAdapter notesAdapter = new NotesAdapter();
 
     public interface OnNoteClicked {
         void onNoteClicked(Note note);
+    }
+
+    public interface OnAddNote {
+        void onAddNote(NoteRepositoryImp noteRepository, NotesAdapter notesAdapter);
     }
 
     public interface onEditNoteClicked {
@@ -53,6 +67,8 @@ public class NotesFragment extends Fragment {
             onEditNoteClicked = (onEditNoteClicked) context;
         if (context instanceof onDateEditClick)
             onDateEditClick = (onDateEditClick) context;
+        if (context instanceof OnAddNote)
+            onAddNote = (OnAddNote) context;
     }
 
     @Override
@@ -61,18 +77,13 @@ public class NotesFragment extends Fragment {
         onNoteClicked = null;
         onEditNoteClicked = null;
         onDateEditClick = null;
+        onAddNote = null;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ArrayList<Note> date = new ArrayList<Note>();
-        date.add(new Note("Сделать уборку", "Убрать свою комнату", "Дата создания: 15.01.1996", true));
-        date.add(new Note("Сделать домашку", "Сделать задание №1", "Дата создания: 16.01.1996", false));
-        date.add(new Note("Заплатить за интернет", "По счету №34543234", "Дата создания: 17.01.1996", true));
-        date.add(new Note("Починить велосипед", "Починить велик!", "Дата создания: 17.01.1996", true));
-        date.add(new Note("Купить тетрадки", "Купить тетради для лекций", "Дата создания: 17.01.1996", false));
-        noteRepository = new NoteRepositoryImp(date);
+        setHasOptionsMenu(true);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,12 +92,14 @@ public class NotesFragment extends Fragment {
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+
         super.onViewCreated(view, savedInstanceState);
+
         RecyclerView noteList = view.findViewById(R.id.notes_list_container);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext());
         noteList.setLayoutManager(linearLayoutManager);
         List<Note> notes = noteRepository.getNotes();
-        NotesAdapter notesAdapter = new NotesAdapter();
+
         notesAdapter.setData(notes);
         noteList.setAdapter(notesAdapter);
 
@@ -105,4 +118,20 @@ public class NotesFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_add_note, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.add_note) {
+
+            if (onAddNote != null) {
+                onAddNote.onAddNote(noteRepository, notesAdapter);
+            }
+        }
+        return true;
+    }
 }
